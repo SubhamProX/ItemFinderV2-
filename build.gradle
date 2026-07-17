@@ -7,18 +7,12 @@ version = project.mod_version
 group = project.maven_group
 
 repositories {
-	maven { 
-		url = "http://server.bbkr.space:8081/artifactory/libs-release/"
-		allowInsecureProtocol = true
-	}
 }
 
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
-
-	implementation "io.github.cottonmc:LibGui:${project.libgui_version}"
 }
 
 processResources {
