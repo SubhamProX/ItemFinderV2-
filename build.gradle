@@ -1,48 +1,48 @@
 plugins {
-	id 'net.fabricmc.fabric-loom' version "${loom_version}"
-	id 'maven-publish'
+    id 'net.fabricmc.fabric-loom' version "${loom_version}"
+    id 'maven-publish'
 }
 
 version = project.mod_version
 group = project.maven_group
 
 repositories {
-	mavenCentral()
-	maven {
-		name = "Modrinth"
-		url = "https://api.modrinth.com/maven"
-	}
-	maven {
-		name = "CurseMaven"
-		url = "https://www.cursemaven.com"
-	}
+    mavenCentral()
+    maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+    }
+    maven {
+        name = "CurseMaven"
+        url = "https://www.cursemaven.com"
+    }
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.minecraft_version}+build.1:v2"
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-	modImplementation "curse.maven:libgui-333657:5147817"
+    modImplementation "curse.maven:libgui-333657:5147817"
 }
 
 processResources {
-	def version = project.version
-	inputs.property "version", version
+    def version = project.version
+    inputs.property "version", version
 
-	filesMatching("fabric.mod.json") {
-		expand "version": version
-	}
+    filesMatching("fabric.mod.json") {
+        expand "version": version
+    }
 }
 
 java {
-	withSourcesJar()
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(25)
-	}
+    withSourcesJar()
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = 25
+    it.options.release = 25
 }
