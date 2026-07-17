@@ -8,23 +8,17 @@ group = project.maven_group
 
 repositories {
     mavenCentral()
-    maven {
-        name = "Modrinth"
-        url = "https://api.modrinth.com/maven"
-    }
 }
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     implementation "net.fabricmc:fabric-loader:${project.loader_version}"
     implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
 }
 
 processResources {
     def version = project.version
     inputs.property "version", version
-
     filesMatching("fabric.mod.json") {
         expand "version": version
     }
@@ -32,9 +26,7 @@ processResources {
 
 java {
     withSourcesJar()
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(25)
-    }
+    toolchain { languageVersion = JavaLanguageVersion.of(25) }
 }
 
 tasks.withType(JavaCompile).configureEach {
