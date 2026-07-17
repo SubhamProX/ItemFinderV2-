@@ -7,7 +7,9 @@ version = project.mod_version
 group = project.maven_group
 
 repositories {
-	maven { url = "https://server.bbkr.space:8081/artifactory/libs-release/" }
+	maven { url = "https://maven.juiceloop.org/" }
+	maven { url = "https://api.modrinth.com/maven" }
+	mavenCentral()
 }
 
 dependencies {
