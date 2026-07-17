@@ -1,43 +1,38 @@
 plugins {
-    id 'net.fabricmc.fabric-loom' version "${loom_version}"
-    id 'maven-publish'
+	id 'net.fabricmc.fabric-loom' version "${loom_version}"
+	id 'maven-publish'
 }
 
 version = project.mod_version
 group = project.maven_group
 
 repositories {
-    mavenCentral()
+	// LibGui ke liye zaroori — Loom khud Minecraft/Fabric ki repos add kar deta hai
+	maven { url = "http://server.bbkr.space:8081/artifactory/libs-release/" }
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    
-    // In non-obfuscated environments (MC 26.1+), use this mappings block:
-    mappings loom.officialMojangMappings() {
-        // This instructs Loom to use the unobfuscated namespace
-        unobfuscated() 
-    }
-    
-    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+	implementation "io.github.cottonmc:LibGui:${project.libgui_version}"
 }
-
-
 
 processResources {
-    def version = project.version
-    inputs.property "version", version
-    filesMatching("fabric.mod.json") {
-        expand "version": version
-    }
-}
-
-java {
-    withSourcesJar()
-    toolchain { languageVersion = JavaLanguageVersion.of(25) }
+	def version = project.version
+	inputs.property "version", version
+	filesMatching("fabric.mod.json") {
+		expand "version": version
+	}
 }
 
 tasks.withType(JavaCompile).configureEach {
-    it.options.release = 25
+	it.options.release = 25
+}
+
+java {
+	withSourcesJar()
+	sourceCompatibility = JavaVersion.VERSION_25
+	targetCompatibility = JavaVersion.VERSION_25
 }
