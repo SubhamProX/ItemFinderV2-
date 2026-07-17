@@ -4,7 +4,7 @@ import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WLabel;
 import io.github.cottonmc.cotton.gui.widget.WTextField;
 import io.github.cottonmc.cotton.gui.client.LightweightGuiDescription;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 
 public class ItemFinderGui extends LightweightGuiDescription {
 	public ItemFinderGui(){
