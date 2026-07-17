@@ -8,8 +8,8 @@ import net.minecraft.text.Text;
 
 public class ItemFinderGui extends LightweightGuiDescription {
 	public ItemFinderGui(){
-		WGridPanel root = new WGridPanel(); // Fixed typo here
-		setRootPanel(root);                  // Fixed capital 'S' to lowercase 's'
+		WGridPanel root = new WGridPanel(); // Fixed typo: WGridePanel -> WGridPanel
+		setRootPanel(root);                  // Fixed case-sensitivity: SetRootPanel -> setRootPanel
 		root.setSize(150, 130);
 		
 		WLabel helloLabel = new WLabel(Text.literal("Hello"));
@@ -19,4 +19,4 @@ public class ItemFinderGui extends LightweightGuiDescription {
 		root.add(searchBox, 0, 1, 4, 1);
 		root.validate(this);
 	}
-		 }
+}
