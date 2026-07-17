@@ -13,12 +13,16 @@ repositories {
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     
-    // Add this line to provide the proper names for Minecraft classes/methods:
-    mappings loom.officialMojangMappings() 
+    // In non-obfuscated environments (MC 26.1+), use this mappings block:
+    mappings loom.officialMojangMappings() {
+        // This instructs Loom to use the unobfuscated namespace
+        unobfuscated() 
+    }
     
     implementation "net.fabricmc:fabric-loader:${project.loader_version}"
     implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 }
+
 
 
 processResources {
