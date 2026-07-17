@@ -16,6 +16,7 @@ public class ItemFinderScreen extends Screen {
     private EditBox searchBox;
     private final List<Item> matchedItems = new ArrayList<>();
     private final List<Button> itemButtons = new ArrayList<>();
+    private boolean suppressResponder = false;
 
     private static final int OVERLAY_COLOR = 0xBF000000;
     private static final int TITLE_COLOR = 0xFFFDB813;
@@ -44,7 +45,8 @@ public class ItemFinderScreen extends Screen {
     }
 
     private void onSearchChanged(String query) {
-        // Purane item buttons hatao
+        if (suppressResponder) return; // khud ke setValue() call se dobara trigger na ho
+
         for (Button b : itemButtons) {
             this.removeWidget(b);
         }
@@ -61,7 +63,6 @@ public class ItemFinderScreen extends Screen {
             }
         }
 
-        // Har matching item ke liye ek chhota button banao (max 12)
         int listX = this.width / 2 - 130;
         int startY = this.height / 4 + 80;
         for (int i = 0; i < Math.min(matchedItems.size(), 12); i++) {
@@ -70,8 +71,10 @@ public class ItemFinderScreen extends Screen {
             int rowY = startY + i * 14;
 
             Button itemButton = Button.builder(Component.literal(itemName), (btn) -> {
-                        this.searchBox.setValue(itemName); // autofill
-                        ChestFinder.scanForItem(item);      // sirf isi item ko scan karo
+                        suppressResponder = true;
+                        this.searchBox.setValue(itemName);
+                        suppressResponder = false;
+                        ChestFinder.scanForItem(item);
                     })
                     .bounds(listX, rowY, 220, 12)
                     .build();
@@ -104,4 +107,4 @@ public class ItemFinderScreen extends Screen {
     public boolean isPauseScreen() {
         return false;
     }
-                    }
+    }
