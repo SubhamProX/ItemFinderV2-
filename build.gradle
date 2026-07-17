@@ -12,20 +12,13 @@ repositories {
         name = "Modrinth"
         url = "https://api.modrinth.com/maven"
     }
-    maven {
-        name = "CottonMC"
-        url = "https://staging.alexiil.uk/maven/"
-        content {
-            includeGroup "io.github.cottonmc"
-        }
-    }
 }
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     implementation "net.fabricmc:fabric-loader:${project.loader_version}"
     implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
-    implementation "io.github.cottonmc:LibGUI:${project.libgui_version}"
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 }
 
 processResources {
