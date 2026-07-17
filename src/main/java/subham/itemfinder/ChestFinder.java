@@ -1,6 +1,7 @@
 package subham.itemfinder;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
@@ -8,7 +9,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
-import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,28 +24,22 @@ public class ChestFinder {
         matchedChests.clear();
 
         Minecraft client = Minecraft.getInstance();
-        if (client.level == null || client.player == null) return;
+        ClientLevel level = client.level;
+        if (level == null || client.player == null) return;
 
-        BlockPos playerPos = client.player.blockPosition();
-        int radius = 32;
-        int chunkRadius = (radius / 16) + 1; // ek extra chunk buffer ke saath
+        BlockPos center = client.player.blockPosition();
+        int radius = 24;
 
-        // Math.floorDiv use kiya taaki negative coordinates pe bhi sahi chunk mile
-        int playerChunkX = Math.floorDiv(playerPos.getX(), 16);
-        int playerChunkZ = Math.floorDiv(playerPos.getZ(), 16);
+        for (int x = -radius; x <= radius; x++) {
+            for (int y = -radius; y <= radius; y++) {
+                for (int z = -radius; z <= radius; z++) {
+                    BlockPos pos = center.offset(x, y, z);
 
-        for (int cx = -chunkRadius; cx <= chunkRadius; cx++) {
-            for (int cz = -chunkRadius; cz <= chunkRadius; cz++) {
-                int chunkX = playerChunkX + cx;
-                int chunkZ = playerChunkZ + cz;
+                    BlockState state = level.getBlockState(pos);
+                    if (state.isAir() || !state.hasBlockEntity()) continue;
 
-                if (!client.level.hasChunk(chunkX, chunkZ)) continue;
-
-                LevelChunk chunk = client.level.getChunk(chunkX, chunkZ);
-
-                for (BlockEntity be : chunk.getBlockEntities().values()) {
-                    BlockPos pos = be.getBlockPos();
-                    if (pos.distSqr(playerPos) > (double) radius * radius) continue;
+                    BlockEntity be = level.getBlockEntity(pos);
+                    if (be == null) continue;
 
                     if (be instanceof ChestBlockEntity chest && containsItem(chest, targetItem)) {
                         matchedChests.add(pos.immutable());
@@ -67,10 +62,8 @@ public class ChestFinder {
 
     private static boolean containsItem(Container container, Item targetItem) {
         for (int i = 0; i < container.getContainerSize(); i++) {
-            if (container.getItem(i).is(targetItem)) {
-                return true;
-            }
+            if (container.getItem(i).is(targetItem)) return true;
         }
         return false;
     }
-                }
+    }
