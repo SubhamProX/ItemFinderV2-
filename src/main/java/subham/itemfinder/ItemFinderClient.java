@@ -30,7 +30,7 @@ public class ItemFinderClient implements ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (openFinderKey.consumeClick()) {
-                Minecraft.getInstance().setScreen(new ItemFinderScreen());
+                Minecraft.getInstance().gui.setScreen(new ItemFinderScreen());
             }
         });
 
