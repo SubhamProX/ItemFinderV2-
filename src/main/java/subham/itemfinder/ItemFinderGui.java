@@ -8,15 +8,15 @@ import net.minecraft.text.Text;
 
 public class ItemFinderGui extends LightweightGuiDescription {
 	public ItemFinderGui(){
-		WGridePanel root = new WGridePanel ();
-		SetRootPanel(root);
+		WGridPanel root = new WGridPanel(); // Fixed typo here
+		setRootPanel(root);                  // Fixed capital 'S' to lowercase 's'
 		root.setSize(150, 130);
 		
 		WLabel helloLabel = new WLabel(Text.literal("Hello"));
-        root.add(helloLabel, 0, 0, 4, 1);
+		root.add(helloLabel, 0, 0, 4, 1);
 		
 		WTextField searchBox = new WTextField(Text.literal("Search..."));
-        root.add(searchBox, 0, 1, 4, 1);
-        root.validate(this);
-    }
-}
+		root.add(searchBox, 0, 1, 4, 1);
+		root.validate(this);
+	}
+		 }
