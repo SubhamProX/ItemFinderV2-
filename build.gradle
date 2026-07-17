@@ -7,17 +7,23 @@ version = project.mod_version
 group = project.maven_group
 
 repositories {
-	maven { url = "https://maven.juiceloop.org/" }
-	maven { url = "https://api.modrinth.com/maven" }
 	mavenCentral()
+	maven {
+		name = "Modrinth"
+		url = "https://api.modrinth.com/maven"
+	}
+	maven {
+		name = "CurseMaven"
+		url = "https://www.cursemaven.com"
+	}
 }
-
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-	implementation "io.github.cottonmc:LibGui:${project.libgui_version}"
+	// Fetches LibGui securely from Modrinth
+	implementation "maven.modrinth:libgui:${project.libgui_version}"
 }
 
 processResources {
