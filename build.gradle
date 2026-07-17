@@ -9,18 +9,19 @@ group = project.maven_group
 repositories {
 	mavenCentral()
 	maven {
-		name = "CurseMaven"
-		url = "https://www.cursemaven.com"
+		name = "Modrinth"
+		url = "https://api.modrinth.com/maven"
 	}
 }
 
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings "net.fabricmc:yarn:${project.minecraft_version}+build.1:v2"
 	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-	// Fetches LibGui securely from Modrinth
-	modImplementation "curse.maven:libgui-333657:5147817"
+	// Loom 1.9 modern configurations apply internally here
+	modImplementation "maven.modrinth:libgui:${project.libgui_version}"
 }
 
 processResources {
