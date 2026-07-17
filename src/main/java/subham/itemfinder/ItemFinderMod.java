@@ -23,12 +23,12 @@ public class ItemFinderMod implements ModInitializer {
         PayloadTypeRegistry.playS2C().register(SearchResultPacket.TYPE, SearchResultPacket.CODEC);
 
         ServerPlayNetworking.registerGlobalReceiver(SearchPacket.TYPE, (payload, context) -> {
-            ServerLevel level = context.player().serverLevel();
+            ServerLevel level = (ServerLevel) context.player().level();
             BlockPos center = context.player().blockPosition();
             int radius = payload.radius();
 
             Identifier itemId = Identifier.parse(payload.itemId());
-            Item targetItem = BuiltInRegistries.ITEM.get(itemId);
+            Item targetItem = BuiltInRegistries.ITEM.getValue(itemId);
 
             StringBuilder positions = new StringBuilder();
             int count = 0;
@@ -68,4 +68,4 @@ public class ItemFinderMod implements ModInitializer {
         }
         return false;
     }
-          }
+                         }
