@@ -19,8 +19,8 @@ public class ItemFinderMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        PayloadTypeRegistry.playC2S().register(SearchPacket.TYPE, SearchPacket.CODEC);
-        PayloadTypeRegistry.playS2C().register(SearchResultPacket.TYPE, SearchResultPacket.CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(SearchPacket.TYPE, SearchPacket.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(SearchResultPacket.TYPE, SearchResultPacket.CODEC);
 
         ServerPlayNetworking.registerGlobalReceiver(SearchPacket.TYPE, (payload, context) -> {
             ServerLevel level = (ServerLevel) context.player().level();
