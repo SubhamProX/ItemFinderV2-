@@ -12,11 +12,7 @@ public class ItemFinderGui extends LightweightGuiDescription {
 		setRootPanel(root);                  // Fixed case-sensitivity: SetRootPanel -> setRootPanel
 		root.setSize(150, 130);
 		
-		WLabel helloLabel = new WLabel(Text.literal("Hello"));
-		root.add(helloLabel, 0, 0, 4, 1);
-		
-		WTextField searchBox = new WTextField(Text.literal("Search..."));
-		root.add(searchBox, 0, 1, 4, 1);
-		root.validate(this);
+		WLabel helloLabel = new WLabel(Component.literal("Hello"));
+WTextField searchBox = new WTextField(Component.literal("Search..."));
 	}
 }
