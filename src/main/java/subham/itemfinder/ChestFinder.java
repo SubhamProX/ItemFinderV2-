@@ -14,9 +14,18 @@ public class ChestFinder {
 
     public static final List<BlockPos> matchedChests = new ArrayList<>();
     public static Item currentSearchItem;
+    public static int baselineCount = 0;
+    public static boolean searchActive = false;
 
     public static void scanForItem(Item targetItem) {
         currentSearchItem = targetItem;
+        searchActive = true;
+
+        Minecraft client = Minecraft.getInstance();
+        if (client.player != null) {
+            baselineCount = client.player.getInventory().countItem(targetItem);
+        }
+
         String itemId = BuiltInRegistries.ITEM.getKey(targetItem).toString();
         ClientPlayNetworking.send(new SearchPacket(itemId, 32));
     }
@@ -47,4 +56,4 @@ public class ChestFinder {
             }
         }
     }
-    }
+}
