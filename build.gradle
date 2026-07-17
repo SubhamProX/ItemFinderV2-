@@ -7,8 +7,10 @@ version = project.mod_version
 group = project.maven_group
 
 repositories {
-	// LibGui ke liye zaroori — Loom khud Minecraft/Fabric ki repos add kar deta hai
-	maven { url = "http://server.bbkr.space:8081/artifactory/libs-release/" }
+	maven { 
+		url = "http://server.bbkr.space:8081/artifactory/libs-release/"
+		allowInsecureProtocol = true
+	}
 }
 
 dependencies {
