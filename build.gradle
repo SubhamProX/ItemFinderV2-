@@ -12,6 +12,10 @@ repositories {
 		name = "Modrinth"
 		url = "https://api.modrinth.com/maven"
 	}
+	maven {
+		name = "CurseMaven"
+		url = "https://www.cursemaven.com"
+	}
 }
 
 dependencies {
@@ -20,8 +24,8 @@ dependencies {
 	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-	// Loom 1.9 modern configurations apply internally here
-	modImplementation "maven.modrinth:libgui:${project.libgui_version}"
+	// Binds correctly via CurseForge mirror to avoid dead domains
+	modImplementation "curse.maven:libgui-333657:5147817"
 }
 
 processResources {
@@ -33,12 +37,14 @@ processResources {
 	}
 }
 
-tasks.withType(JavaCompile).configureEach {
-	it.options.release = 25
-}
-
 java {
 	withSourcesJar()
-	sourceCompatibility = JavaVersion.VERSION_25
-	targetCompatibility = JavaVersion.VERSION_25
+	// Yeh automatically pure code ko isolated Java 25 par hi target aur compile karega!
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(25)
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 25
 }
