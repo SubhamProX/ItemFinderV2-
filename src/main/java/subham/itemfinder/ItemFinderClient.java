@@ -6,7 +6,6 @@ import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.KeyMapping;
 import com.mojang.blaze3d.platform.InputConstants;
-import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
 
 public class ItemFinderClient implements ClientModInitializer {
 
@@ -23,8 +22,8 @@ public class ItemFinderClient implements ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (openFinderKey.consumeClick()) {
-                client.setScreen(new CottonClientScreen(new ItemFinderGui()));
+                client.setScreen(new ItemFinderScreen());
             }
         });
     }
-}
+                }
