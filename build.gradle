@@ -9,21 +9,18 @@ group = project.maven_group
 repositories {
 	mavenCentral()
 	maven {
-		name = "Modrinth"
-		url = "https://api.modrinth.com/maven"
-	}
-	maven {
 		name = "CurseMaven"
 		url = "https://www.cursemaven.com"
 	}
 }
+
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
 	// Fetches LibGui securely from Modrinth
-	implementation "maven.modrinth:libgui:${project.libgui_version}"
+	modImplementation "curse.maven:libgui-333657:5147817"
 }
 
 processResources {
