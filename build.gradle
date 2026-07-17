@@ -1,8 +1,7 @@
 plugins {
-    id 'net.fabricmc.fabric-loom' version '1.16'
+    id 'fabric-loom' version '1.16'
     id 'maven-publish'
 }
-
 version = project.mod_version
 group = project.maven_group
 
