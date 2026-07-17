@@ -10,7 +10,7 @@ import net.minecraft.world.phys.Vec3;
 public class ChestHighlightRenderer {
 
     public static void register() {
-        LevelRenderEvents.LAST.register(context -> {
+        LevelRenderEvents.END_MAIN.register(context -> {
             if (ChestFinder.matchedChests.isEmpty()) return;
             if (context.bufferSource() == null) return;
 
@@ -24,4 +24,4 @@ public class ChestHighlightRenderer {
             }
         });
     }
-                    }
+}
