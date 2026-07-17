@@ -1,8 +1,10 @@
 package subham.itemfinder;
 
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 
 import java.util.ArrayList;
@@ -16,7 +18,7 @@ public class ChestFinder {
     public static void scanForItem(Item targetItem) {
         currentSearchItem = targetItem;
         String itemId = BuiltInRegistries.ITEM.getKey(targetItem).toString();
-        net.fabricmc.fabric.api.networking.v1.ClientPlayNetworking.send(new SearchPacket(itemId, 32));
+        ClientPlayNetworking.send(new SearchPacket(itemId, 32));
     }
 
     public static void onResultReceived(String encodedPositions, int totalFound) {
@@ -25,7 +27,7 @@ public class ChestFinder {
 
         if (totalFound == 0) {
             if (client.player != null) {
-                client.player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§cNo chests found with this item."));
+                client.player.sendSystemMessage(Component.literal("§cNo chests found with this item."));
             }
             return;
         }
@@ -39,10 +41,10 @@ public class ChestFinder {
         }
 
         if (client.player != null) {
-            client.player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§aFound " + totalFound + " container(s):"));
+            client.player.sendSystemMessage(Component.literal("§aFound " + totalFound + " container(s):"));
             for (BlockPos pos : matchedChests) {
-                client.player.sendSystemMessage(net.minecraft.network.chat.Component.literal(" §7-> X:" + pos.getX() + " Y:" + pos.getY() + " Z:" + pos.getZ()));
+                client.player.sendSystemMessage(Component.literal(" §7-> X:" + pos.getX() + " Y:" + pos.getY() + " Z:" + pos.getZ()));
             }
         }
     }
-}
+    }
