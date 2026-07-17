@@ -41,7 +41,7 @@ public class ItemFinderClient implements ClientModInitializer {
                         ChestFinder.onResultReceived(payload.encodedPositions(), payload.totalFound()))
         );
 
-        ChestHighlightRenderer.register();
+        // ChestHighlightRenderer.register();
         ChestTrailRenderer.register();
         ChestHud.register();
         InventoryWatcher.register();
