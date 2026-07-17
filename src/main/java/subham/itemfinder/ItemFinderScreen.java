@@ -53,10 +53,15 @@ public class ItemFinderScreen extends Screen {
                 matchedItems.add(item);
             }
         }
+        // Ab yahan koi auto-scan nahi — sirf list dikhegi, scan tabhi hoga jab click karoge
+    }
 
-        if (!matchedItems.isEmpty()) {
-            ChestFinder.scanForItem(matchedItems.get(0));
-        }
+    private int getListX() {
+        return this.width / 2 - 130;
+    }
+
+    private int getListStartY() {
+        return this.height / 4 + 75;
     }
 
     @Override
@@ -73,15 +78,35 @@ public class ItemFinderScreen extends Screen {
         graphics.text(this.font, "ITEM FINDER", this.width / 2 - this.font.width("ITEM FINDER") / 2,
                 this.height / 4 - 10, TITLE_COLOR, true);
 
-        int listX = this.width / 2 - 130;
+        int listX = getListX();
         int listY = this.height / 4 + 60;
-        graphics.text(this.font, matchedItems.size() + " items match", listX, listY, 0xFFFFFFFF, true);
+        graphics.text(this.font, matchedItems.size() + " items match - click ek item pe select karne ke liye", listX, listY, 0xFFFFFFFF, true);
 
-        int y = listY + 15;
+        int startY = getListStartY();
         for (int i = 0; i < Math.min(matchedItems.size(), 12); i++) {
-            graphics.text(this.font, matchedItems.get(i).getDefaultInstance().getHoverName().getString(), listX, y, 0xFFFFFFFF, true);
-            y += 12;
+            int rowY = startY + i * 12;
+            // Mouse hover pe highlight
+            boolean hovering = mouseX >= listX && mouseX <= listX + 220 && mouseY >= rowY - 1 && mouseY <= rowY + 10;
+            int color = hovering ? 0xFFFFFF00 : 0xFFFFFFFF;
+            graphics.text(this.font, matchedItems.get(i).getDefaultInstance().getHoverName().getString(), listX, rowY, color, true);
         }
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        int listX = getListX();
+        int startY = getListStartY();
+        for (int i = 0; i < Math.min(matchedItems.size(), 12); i++) {
+            int rowY = startY + i * 12;
+            if (mouseX >= listX && mouseX <= listX + 220 && mouseY >= rowY - 1 && mouseY <= rowY + 10) {
+                Item selected = matchedItems.get(i);
+                String name = selected.getDefaultInstance().getHoverName().getString();
+                this.searchBox.setValue(name); // autofill: search box mein naam bhar do
+                ChestFinder.scanForItem(selected); // sirf isi exact item ko scan karo
+                return true;
+            }
+        }
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
