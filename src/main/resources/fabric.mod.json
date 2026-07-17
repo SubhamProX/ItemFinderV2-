@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "itemfinder",
-  "version": "${version}",
+  "version": "1.0.0",
 
   "name": "Item Finder",
   "description": "Search and find items instantly with a searchable GUI.",
@@ -22,3 +22,4 @@
     "java": ">=25",
     "fabric-api": "*"
   }
+}
