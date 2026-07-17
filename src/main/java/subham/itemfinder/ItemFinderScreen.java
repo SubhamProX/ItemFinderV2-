@@ -75,6 +75,7 @@ public class ItemFinderScreen extends Screen {
                         this.searchBox.setValue(itemName);
                         suppressResponder = false;
                         ChestFinder.scanForItem(item);
+                        this.minecraft.setScreen(null);
                     })
                     .bounds(listX, rowY, 220, 12)
                     .build();
