@@ -34,7 +34,7 @@ public class ItemFinderClient implements ClientModInitializer {
             }
         });
 
-        ChestHighlightRenderer.register();
+        ChestFinder.register();
         // ChestSlotHighlighter.register(); // Access Widener setup hone ke baad add karenge
     }
         }
