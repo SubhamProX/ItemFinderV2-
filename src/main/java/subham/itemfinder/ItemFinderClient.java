@@ -10,6 +10,7 @@ import net.minecraft.resources.Identifier;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
 public class ItemFinderClient implements ClientModInitializer {
 
@@ -28,21 +29,21 @@ public class ItemFinderClient implements ClientModInitializer {
                 CATEGORY
         ));
 
-        net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.registerGlobalReceiver(
-        SearchResultPacket.TYPE,
-        (payload, context) -> context.client().execute(() ->
-                ChestFinder.onResultReceived(payload.encodedPositions(), payload.totalFound()))
-        );
-
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (openFinderKey.consumeClick()) {
                 Minecraft.getInstance().gui.setScreen(new ItemFinderScreen());
             }
         });
 
-        // ChestFinder.register();
-        // ChestSlotHighlighter.register(); 
+        ClientPlayNetworking.registerGlobalReceiver(
+                SearchResultPacket.TYPE,
+                (payload, context) -> context.client().execute(() ->
+                        ChestFinder.onResultReceived(payload.encodedPositions(), payload.totalFound()))
+        );
+
+        ChestHighlightRenderer.register();
         ChestTrailRenderer.register();
         ChestHud.register();
+        InventoryWatcher.register();
     }
-        }
+            }
