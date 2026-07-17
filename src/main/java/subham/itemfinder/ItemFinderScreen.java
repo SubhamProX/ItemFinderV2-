@@ -2,7 +2,7 @@ package subham.itemfinder;
 
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.GuiGraphics; // Keep if using Mojmap, but verify signature below
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
 public class ItemFinderScreen extends Screen {
@@ -28,8 +28,9 @@ public class ItemFinderScreen extends Screen {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        // In newer versions, renderBackground only requires the graphics instance
-        this.renderBackground(graphics, mouseX, mouseY, delta);
+        // Modern versions only require the graphics context to render the background blur/dirt
+        this.renderBackground(graphics); 
+        
         graphics.drawCenteredString(this.font, this.title, this.width / 2, 20, 0xFFFFFF);
         super.render(graphics, mouseX, mouseY, delta);
     }
@@ -38,4 +39,5 @@ public class ItemFinderScreen extends Screen {
     public boolean isPauseScreen() {
         return false;
     }
-    }
+            }
+        
