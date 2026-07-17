@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.KeyMapping;
 import com.mojang.blaze3d.platform.InputConstants;
+import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
 
 public class ItemFinderClient implements ClientModInitializer {
 
@@ -15,14 +16,14 @@ public class ItemFinderClient implements ClientModInitializer {
     public void onInitializeClient() {
         openFinderKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
             "key.itemfinder.open",
-            InputConstants.Type.KEYBOARD,
+            InputConstants.Type.KEYSYM,
             InputConstants.KEY_Y,
             KeyMapping.Category.MISC
         ));
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (openFinderKey.consumeClick()) {
-                client.setScreen(new ItemFinderScreen());
+                client.setScreen(new CottonClientScreen(new ItemFinderGui()));
             }
         });
     }
