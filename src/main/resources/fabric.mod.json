@@ -13,6 +13,9 @@
   "entrypoints": {
     "client": [
       "subham.itemfinder.ItemFinderClient"
+    ],
+    "main": [
+      "subham.itemfinder.ItemFinderMod"
     ]
   },
 
