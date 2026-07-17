@@ -8,8 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Gradle ko run karne ke liye Java 21 zaroori hai taaki version 69 ka crash na aaye
-      - name: Set up JDK 21 for Gradle
+      - name: Set up JDK 21 for Gradle Bootstrapping
         uses: actions/setup-java@v4
         with:
           java-version: '21'
