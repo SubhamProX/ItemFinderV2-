@@ -14,6 +14,12 @@ jobs:
           java-version: '25'
           distribution: 'temurin'
 
+      - name: Download LibGui
+        run: |
+          mkdir -p libs
+          curl -L "https://github.com/CottonMC/LibGui/releases/download/17.0.0/LibGui-17.0.0+26.2.jar" \
+            -o libs/LibGui-17.0.0+26.2.jar
+
       - name: Setup Gradle Environment
         uses: gradle/actions/setup-gradle@v4
         with:
@@ -27,4 +33,3 @@ jobs:
         with:
           name: mod-jar
           path: build/libs/*.jar
-          
