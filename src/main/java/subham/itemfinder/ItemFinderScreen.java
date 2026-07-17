@@ -16,7 +16,6 @@ public class ItemFinderScreen extends Screen {
     private EditBox searchBox;
     private final List<Item> matchedItems = new ArrayList<>();
 
-    // Colors (tumhare HTML design se liye)
     private static final int OVERLAY_COLOR = 0xBF000000;
     private static final int TITLE_COLOR = 0xFFFDB813;
     private static final int BOX_BG_COLOR = 0xFF4A4A4A;
@@ -49,13 +48,12 @@ public class ItemFinderScreen extends Screen {
 
         String lower = query.toLowerCase();
         for (Item item : BuiltInRegistries.ITEM) {
-            String name = item.getDescription().getString().toLowerCase();
+            String name = item.getDefaultInstance().getHoverName().getString().toLowerCase();
             if (name.contains(lower)) {
                 matchedItems.add(item);
             }
         }
 
-        // Pehla matching item mila to chest scan bhi chalao
         if (!matchedItems.isEmpty()) {
             ChestFinder.scanForItem(matchedItems.get(0));
         }
@@ -81,7 +79,7 @@ public class ItemFinderScreen extends Screen {
 
         int y = listY + 15;
         for (int i = 0; i < Math.min(matchedItems.size(), 12); i++) {
-            graphics.text(this.font, matchedItems.get(i).getDescription().getString(), listX, y, 0xFFFFFFFF, true);
+            graphics.text(this.font, matchedItems.get(i).getDefaultInstance().getHoverName().getString(), listX, y, 0xFFFFFFFF, true);
             y += 12;
         }
     }
@@ -90,4 +88,4 @@ public class ItemFinderScreen extends Screen {
     public boolean isPauseScreen() {
         return false;
     }
-            }
+    }
