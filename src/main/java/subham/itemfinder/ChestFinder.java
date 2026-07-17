@@ -26,16 +26,25 @@ public class ChestFinder {
         if (client.level == null || client.player == null) return;
 
         BlockPos playerPos = client.player.blockPosition();
-        int radius = 32; // Bigger but smarter scanning
+        int radius = 32;
+        int chunkRadius = (radius / 16) + 1; // ek extra chunk buffer ke saath
 
-        // Scan only loaded chunks (much better performance)
-        for (int cx = -radius / 16; cx <= radius / 16; cx++) {
-            for (int cz = -radius / 16; cz <= radius / 16; cz++) {
-                LevelChunk chunk = client.level.getChunk(playerPos.getX() / 16 + cx, playerPos.getZ() / 16 + cz);
+        // Math.floorDiv use kiya taaki negative coordinates pe bhi sahi chunk mile
+        int playerChunkX = Math.floorDiv(playerPos.getX(), 16);
+        int playerChunkZ = Math.floorDiv(playerPos.getZ(), 16);
+
+        for (int cx = -chunkRadius; cx <= chunkRadius; cx++) {
+            for (int cz = -chunkRadius; cz <= chunkRadius; cz++) {
+                int chunkX = playerChunkX + cx;
+                int chunkZ = playerChunkZ + cz;
+
+                if (!client.level.hasChunk(chunkX, chunkZ)) continue;
+
+                LevelChunk chunk = client.level.getChunk(chunkX, chunkZ);
 
                 for (BlockEntity be : chunk.getBlockEntities().values()) {
                     BlockPos pos = be.getBlockPos();
-                    if (pos.distSqr(playerPos) > radius * radius) continue;
+                    if (pos.distSqr(playerPos) > (double) radius * radius) continue;
 
                     if (be instanceof ChestBlockEntity chest && containsItem(chest, targetItem)) {
                         matchedChests.add(pos.immutable());
@@ -51,7 +60,7 @@ public class ChestFinder {
         } else {
             client.player.sendSystemMessage(Component.literal("§aFound " + matchedChests.size() + " container(s):"));
             for (BlockPos pos : matchedChests) {
-                client.player.sendSystemMessage(Component.literal(" §7→ X:" + pos.getX() + " Y:" + pos.getY() + " Z:" + pos.getZ()));
+                client.player.sendSystemMessage(Component.literal(" §7-> X:" + pos.getX() + " Y:" + pos.getY() + " Z:" + pos.getZ()));
             }
         }
     }
@@ -64,4 +73,4 @@ public class ChestFinder {
         }
         return false;
     }
-            }
+                }
