@@ -8,18 +8,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up JDK 25
+      # Gradle ko run karne ke liye Java 21 zaroori hai taaki version 69 ka crash na aaye
+      - name: Set up JDK 21 for Gradle
         uses: actions/setup-java@v4
         with:
-          java-version: '25'
+          java-version: '21'
           distribution: 'temurin'
 
-      - name: Setup Gradle
+      - name: Setup Gradle Environment
         uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: '8.13' 
-          
-          
+          gradle-version: '8.12'
+
       - name: Build with Gradle
         run: gradle build
 
@@ -28,3 +28,4 @@ jobs:
         with:
           name: mod-jar
           path: build/libs/*.jar
+          
