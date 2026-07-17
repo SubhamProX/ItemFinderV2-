@@ -5,10 +5,9 @@ buildscript {
         gradlePluginPortal()
     }
     dependencies {
-        classpath "net.fabricmc:fabric-loom:1.16"
+        classpath "net.fabricmc:fabric-loom:1.17.12"
     }
 }
-
 apply plugin: "fabric-loom"
 apply plugin: "maven-publish"
 
