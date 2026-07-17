@@ -15,6 +15,7 @@ public class ItemFinderScreen extends Screen {
 
     private EditBox searchBox;
     private final List<Item> matchedItems = new ArrayList<>();
+    private final List<Button> itemButtons = new ArrayList<>();
 
     private static final int OVERLAY_COLOR = 0xBF000000;
     private static final int TITLE_COLOR = 0xFFFDB813;
@@ -43,7 +44,13 @@ public class ItemFinderScreen extends Screen {
     }
 
     private void onSearchChanged(String query) {
+        // Purane item buttons hatao
+        for (Button b : itemButtons) {
+            this.removeWidget(b);
+        }
+        itemButtons.clear();
         matchedItems.clear();
+
         if (query == null || query.isEmpty()) return;
 
         String lower = query.toLowerCase();
@@ -53,15 +60,25 @@ public class ItemFinderScreen extends Screen {
                 matchedItems.add(item);
             }
         }
-        // Ab yahan koi auto-scan nahi — sirf list dikhegi, scan tabhi hoga jab click karoge
-    }
 
-    private int getListX() {
-        return this.width / 2 - 130;
-    }
+        // Har matching item ke liye ek chhota button banao (max 12)
+        int listX = this.width / 2 - 130;
+        int startY = this.height / 4 + 80;
+        for (int i = 0; i < Math.min(matchedItems.size(), 12); i++) {
+            Item item = matchedItems.get(i);
+            String itemName = item.getDefaultInstance().getHoverName().getString();
+            int rowY = startY + i * 14;
 
-    private int getListStartY() {
-        return this.height / 4 + 75;
+            Button itemButton = Button.builder(Component.literal(itemName), (btn) -> {
+                        this.searchBox.setValue(itemName); // autofill
+                        ChestFinder.scanForItem(item);      // sirf isi item ko scan karo
+                    })
+                    .bounds(listX, rowY, 220, 12)
+                    .build();
+
+            this.addRenderableWidget(itemButton);
+            itemButtons.add(itemButton);
+        }
     }
 
     @Override
@@ -78,39 +95,13 @@ public class ItemFinderScreen extends Screen {
         graphics.text(this.font, "ITEM FINDER", this.width / 2 - this.font.width("ITEM FINDER") / 2,
                 this.height / 4 - 10, TITLE_COLOR, true);
 
-        int listX = getListX();
-        int listY = this.height / 4 + 60;
+        int listX = this.width / 2 - 130;
+        int listY = this.height / 4 + 65;
         graphics.text(this.font, matchedItems.size() + " items match - click ek item pe select karne ke liye", listX, listY, 0xFFFFFFFF, true);
-
-        int startY = getListStartY();
-        for (int i = 0; i < Math.min(matchedItems.size(), 12); i++) {
-            int rowY = startY + i * 12;
-            // Mouse hover pe highlight
-            boolean hovering = mouseX >= listX && mouseX <= listX + 220 && mouseY >= rowY - 1 && mouseY <= rowY + 10;
-            int color = hovering ? 0xFFFFFF00 : 0xFFFFFFFF;
-            graphics.text(this.font, matchedItems.get(i).getDefaultInstance().getHoverName().getString(), listX, rowY, color, true);
-        }
-    }
-
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        int listX = getListX();
-        int startY = getListStartY();
-        for (int i = 0; i < Math.min(matchedItems.size(), 12); i++) {
-            int rowY = startY + i * 12;
-            if (mouseX >= listX && mouseX <= listX + 220 && mouseY >= rowY - 1 && mouseY <= rowY + 10) {
-                Item selected = matchedItems.get(i);
-                String name = selected.getDefaultInstance().getHoverName().getString();
-                this.searchBox.setValue(name); // autofill: search box mein naam bhar do
-                ChestFinder.scanForItem(selected); // sirf isi exact item ko scan karo
-                return true;
-            }
-        }
-        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
     public boolean isPauseScreen() {
         return false;
     }
-    }
+                    }
