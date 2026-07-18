@@ -46,7 +46,7 @@ public class ItemFinderScreen extends Screen {
     }
 
     private void onSearchChanged(String query) {
-        if (suppressResponder) return; // khud ke setValue() call se dobara trigger na ho
+        if (suppressResponder) return; 
 
         for (Button b : itemButtons) {
             this.removeWidget(b);
@@ -102,7 +102,7 @@ public class ItemFinderScreen extends Screen {
 
         int listX = this.width / 2 - 130;
         int listY = this.height / 4 + 65;
-        graphics.text(this.font, matchedItems.size() + " items match - click ek item pe select karne ke liye", listX, listY, 0xFFFFFFFF, true);
+        graphics.text(this.font, matchedItems.size() + " items-match - search and click any item", listX, listY, 0xFFFFFFFF, true);
     }
 
     @Override
