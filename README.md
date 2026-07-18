@@ -6,7 +6,7 @@ Press a key, search for an item by name, click on it, and the mod tells you exac
 
 ![Minecraft](https://img.shields.io/badge/Minecraft-26.2-brightgreen)
 ![Fabric](https://img.shields.io/badge/Mod%20Loader-Fabric-blue)
-![License](https://img.shields.io/badge/license-MIT-lightgrey)
+![License](https://img.shields.io/badge/license-All%20Rights%20Reserved-red)
 
 ---
 
