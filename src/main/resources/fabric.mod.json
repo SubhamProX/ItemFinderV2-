@@ -7,7 +7,7 @@
   "description": "Search and find items instantly with a searchable GUI.",
   "authors": ["Subham"],
 
-  "license": "All-Rights-Reserved",
+  "license": "MIT",
 
   "environment": "client",
   "entrypoints": {
