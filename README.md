@@ -6,7 +6,7 @@ Press a key, search for an item by name, click on it, and the mod tells you exac
 
 ![Minecraft](https://img.shields.io/badge/Minecraft-26.2-brightgreen)
 ![Fabric](https://img.shields.io/badge/Mod%20Loader-Fabric-blue)
-![License](https://img.shields.io/badge/license-All%20Rights%20Reserved-red)
+![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
 ---
 
@@ -52,12 +52,10 @@ Press a key, search for an item by name, click on it, and the mod tells you exac
 
 ## 📄 License
 
-Copyright © 2026 Subham. All Rights Reserved.
-
-This project is **not** open-source. You may not copy, modify, or redistribute
-this code without explicit permission. If permission is granted, credit to
-the original author is required. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License — feel free to use, modify, and share.
 
 ## 🙏 Acknowledgements
 
 Built while learning Fabric modding for Minecraft 26.2 — a brand-new, actively evolving version of the API. Thanks to the Fabric documentation and community for the porting guides that made this possible.
+
+The container-scanning approach (client-server networking for accurate chest contents) was inspired by [lann's Item Finder mod](https://github.com/fadhlanputra/itemfinder) (MIT License).
