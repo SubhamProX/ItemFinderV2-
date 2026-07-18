@@ -1,7 +1,3 @@
-# Item Finder Mod — Progress Tracker
-
-Package name: `subham.itemfinder`
-
 # Item Finder
 
 A Fabric mod for Minecraft that helps you find any item hidden in your chests — instantly.
