@@ -52,7 +52,11 @@ Press a key, search for an item by name, click on it, and the mod tells you exac
 
 ## 📄 License
 
-This project is licensed under the MIT License — feel free to use, modify, and share.
+Copyright © 2026 Subham. All Rights Reserved.
+
+This project is **not** open-source. You may not copy, modify, or redistribute
+this code without explicit permission. If permission is granted, credit to
+the original author is required. See the [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgements
 
