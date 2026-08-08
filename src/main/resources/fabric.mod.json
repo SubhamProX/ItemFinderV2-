@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "itemfinder",
-  "version": "1.0.0",
+  "version": "1.1.0",
 
   "name": "Item Finder",
   "description": "Search and find items instantly with a searchable GUI.",
