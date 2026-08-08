@@ -27,7 +27,7 @@ public class ChestFinder {
         }
 
         String itemId = BuiltInRegistries.ITEM.getKey(targetItem).toString();
-        ClientPlayNetworking.send(new SearchPacket(itemId, 32));
+        ClientPlayNetworking.send(new SearchPacket(itemId, 48));
     }
 
     public static void onResultReceived(String encodedPositions, int totalFound) {
