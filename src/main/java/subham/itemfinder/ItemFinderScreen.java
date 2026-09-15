@@ -154,7 +154,7 @@ public class ItemFinderScreen extends Screen {
 
             // Item icon - if this line errors, paste the exact message
             ItemStack stack = new ItemStack(item);
-            guiGraphics.renderFakeItem(stack, listX + 4, rowY + (ROW_HEIGHT - ICON_SIZE) / 2);
+            graphics.renderFakeItem(stack, listX + 4, rowY + (ROW_HEIGHT - ICON_SIZE) / 2);
 
             String itemName = item.getDefaultInstance().getHoverName().getString();
             graphics.text(this.font, itemName, listX + 4 + ICON_SIZE + 6, rowY + (ROW_HEIGHT - 8) / 2, TEXT_COLOR, false);
