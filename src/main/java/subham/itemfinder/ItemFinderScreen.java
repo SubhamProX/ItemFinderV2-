@@ -8,6 +8,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,13 +17,26 @@ public class ItemFinderScreen extends Screen {
 
     private EditBox searchBox;
     private final List<Item> matchedItems = new ArrayList<>();
-    private final List<Button> itemButtons = new ArrayList<>();
-    private boolean suppressResponder = false;
 
-    private static final int OVERLAY_COLOR = 0xBF000000;
+    private int scrollOffset = 0;
+    private static final int ROW_HEIGHT = 20;
+    private static final int VISIBLE_ROWS = 8;
+    private static final int ICON_SIZE = 16;
+
+    private int listX, listY, listWidth, listHeight;
+
+
+    private static final int OVERLAY_COLOR = 0xC0000814;
     private static final int TITLE_COLOR = 0xFFFDB813;
-    private static final int BOX_BG_COLOR = 0xFF4A4A4A;
-    private static final int BOX_BORDER_COLOR = 0xFF000000;
+    private static final int PANEL_BG = 0xE6202634;
+    private static final int PANEL_BORDER = 0xFF3A4258;
+    private static final int ROW_BG_A = 0x662A3040;
+    private static final int ROW_BG_B = 0x66222633;
+    private static final int ROW_HOVER = 0x8036507A;
+    private static final int SCROLLBAR_TRACK = 0x662A3040;
+    private static final int SCROLLBAR_THUMB = 0xFF5EB0EF;
+    private static final int TEXT_COLOR = 0xFFE8E6E1;
+    private static final int SUBTEXT_COLOR = 0xFF9A9690;
 
     public ItemFinderScreen() {
         super(Component.literal("Item Finder"));
@@ -30,10 +44,16 @@ public class ItemFinderScreen extends Screen {
 
     @Override
     protected void init() {
+        int panelWidth = 280;
         int boxWidth = 200;
         int boxHeight = 20;
-        int startX = this.width / 2 - 130;
-        int startY = this.height / 4 + 30;
+        int startX = this.width / 2 - panelWidth / 2 + 10;
+        int startY = this.height / 4 + 34;
+
+        listX = this.width / 2 - panelWidth / 2 + 10;
+        listY = startY + 46;
+        listWidth = panelWidth - 20;
+        listHeight = VISIBLE_ROWS * ROW_HEIGHT;
 
         this.searchBox = new EditBox(this.font, startX, startY, boxWidth, boxHeight, Component.literal("Search"));
         this.searchBox.setResponder(this::onSearchChanged);
@@ -46,13 +66,8 @@ public class ItemFinderScreen extends Screen {
     }
 
     private void onSearchChanged(String query) {
-        if (suppressResponder) return; 
-
-        for (Button b : itemButtons) {
-            this.removeWidget(b);
-        }
-        itemButtons.clear();
         matchedItems.clear();
+        scrollOffset = 0;
 
         if (query == null || query.isEmpty()) return;
 
@@ -63,46 +78,97 @@ public class ItemFinderScreen extends Screen {
                 matchedItems.add(item);
             }
         }
+    }
 
-        int listX = this.width / 2 - 130;
-        int startY = this.height / 4 + 80;
-        for (int i = 0; i < Math.min(matchedItems.size(), 12); i++) {
-            Item item = matchedItems.get(i);
-            String itemName = item.getDefaultInstance().getHoverName().getString();
-            int rowY = startY + i * 14;
+    private int maxScroll() {
+        return Math.max(0, matchedItems.size() - VISIBLE_ROWS);
+    }
 
-            Button itemButton = Button.builder(Component.literal(itemName), (btn) -> {
-                        suppressResponder = true;
-                        this.searchBox.setValue(itemName);
-                        suppressResponder = false;
-                        ChestFinder.scanForItem(item);
-                        Minecraft.getInstance().gui.setScreen(null);
-                    })
-                    .bounds(listX, rowY, 220, 12)
-                    .build();
-
-            this.addRenderableWidget(itemButton);
-            itemButtons.add(itemButton);
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+        if (mouseX >= listX && mouseX <= listX + listWidth && mouseY >= listY && mouseY <= listY + listHeight) {
+            scrollOffset -= (int) Math.signum(verticalAmount);
+            scrollOffset = Math.max(0, Math.min(scrollOffset, maxScroll()));
+            return true;
         }
+        return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (mouseX >= listX && mouseX <= listX + listWidth && mouseY >= listY && mouseY <= listY + listHeight) {
+            int row = (int) ((mouseY - listY) / ROW_HEIGHT) + scrollOffset;
+            if (row >= 0 && row < matchedItems.size()) {
+                Item item = matchedItems.get(row);
+                String itemName = item.getDefaultInstance().getHoverName().getString();
+                this.searchBox.setValue(itemName);
+                ChestFinder.scanForItem(item);
+                Minecraft.getInstance().setScreen(null);
+                return true;
+            }
+        }
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         graphics.fill(0, 0, this.width, this.height, OVERLAY_COLOR);
 
-        int wrapX = this.width / 2 - 140;
-        int wrapY = this.height / 4 + 20;
-        graphics.fill(wrapX, wrapY, wrapX + 280, wrapY + 40, BOX_BG_COLOR);
-        graphics.outline(wrapX, wrapY, 280, 40, BOX_BORDER_COLOR);
+        int panelWidth = 280;
+        int panelX = this.width / 2 - panelWidth / 2;
+        int panelY = this.height / 4 - 20;
+        int panelHeight = listY + listHeight - panelY + 16;
+
+        graphics.fill(panelX, panelY, panelX + panelWidth, panelY + panelHeight, PANEL_BG);
+        graphics.outline(panelX, panelY, panelWidth, panelHeight, PANEL_BORDER);
+
+        String title = "ITEM FINDER";
+        graphics.text(this.font, title, this.width / 2 - this.font.width(title) / 2, panelY + 8, TITLE_COLOR, true);
 
         super.extractRenderState(graphics, mouseX, mouseY, delta);
 
-        graphics.text(this.font, "ITEM FINDER", this.width / 2 - this.font.width("ITEM FINDER") / 2,
-                this.height / 4 - 10, TITLE_COLOR, true);
+        String status = matchedItems.isEmpty()
+                ? "Type to search items"
+                : matchedItems.size() + " items match - click one, or scroll for more";
+        graphics.text(this.font, status, listX, listY - 12, SUBTEXT_COLOR, false);
 
-        int listX = this.width / 2 - 130;
-        int listY = this.height / 4 + 65;
-        graphics.text(this.font, matchedItems.size() + " items-match - search and click any item", listX, listY, 0xFFFFFFFF, true);
+        
+        graphics.enableScissor(listX, listY, listX + listWidth, listY + listHeight);
+        graphics.fill(listX, listY, listX + listWidth, listY + listHeight, 0x40000000);
+
+        for (int i = 0; i < VISIBLE_ROWS; i++) {
+            int index = scrollOffset + i;
+            if (index >= matchedItems.size()) break;
+
+            Item item = matchedItems.get(index);
+            int rowY = listY + i * ROW_HEIGHT;
+            boolean hovered = mouseX >= listX && mouseX <= listX + listWidth
+                    && mouseY >= rowY && mouseY <= rowY + ROW_HEIGHT;
+
+            int bg = hovered ? ROW_HOVER : (index % 2 == 0 ? ROW_BG_A : ROW_BG_B);
+            graphics.fill(listX, rowY, listX + listWidth, rowY + ROW_HEIGHT, bg);
+
+            
+            ItemStack stack = new ItemStack(item);
+            graphics.renderItem(stack, listX + 4, rowY + (ROW_HEIGHT - ICON_SIZE) / 2);
+
+            String itemName = item.getDefaultInstance().getHoverName().getString();
+            graphics.text(this.font, itemName, listX + 4 + ICON_SIZE + 6, rowY + (ROW_HEIGHT - 8) / 2, TEXT_COLOR, false);
+        }
+
+        graphics.disableScissor();
+
+        
+        if (matchedItems.size() > VISIBLE_ROWS) {
+            int barX = listX + listWidth + 4;
+            graphics.fill(barX, listY, barX + 4, listY + listHeight, SCROLLBAR_TRACK);
+
+            float visibleRatio = (float) VISIBLE_ROWS / matchedItems.size();
+            int thumbHeight = Math.max(10, (int) (listHeight * visibleRatio));
+            int thumbY = listY + (int) ((listHeight - thumbHeight) * ((float) scrollOffset / maxScroll()));
+
+            graphics.fill(barX, thumbY, barX + 4, thumbY + thumbHeight, SCROLLBAR_THUMB);
+        }
     }
 
     @Override
