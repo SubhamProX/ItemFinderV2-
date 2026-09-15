@@ -5,6 +5,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
@@ -25,7 +26,7 @@ public class ItemFinderScreen extends Screen {
 
     private int listX, listY, listWidth, listHeight;
 
-
+    // --- Colors ---
     private static final int OVERLAY_COLOR = 0xC0000814;
     private static final int TITLE_COLOR = 0xFFFDB813;
     private static final int PANEL_BG = 0xE6202634;
@@ -95,7 +96,10 @@ public class ItemFinderScreen extends Screen {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        double mouseX = event.x();
+        double mouseY = event.y();
+
         if (mouseX >= listX && mouseX <= listX + listWidth && mouseY >= listY && mouseY <= listY + listHeight) {
             int row = (int) ((mouseY - listY) / ROW_HEIGHT) + scrollOffset;
             if (row >= 0 && row < matchedItems.size()) {
@@ -103,11 +107,11 @@ public class ItemFinderScreen extends Screen {
                 String itemName = item.getDefaultInstance().getHoverName().getString();
                 this.searchBox.setValue(itemName);
                 ChestFinder.scanForItem(item);
-                Minecraft.getInstance().setScreen(null);
+                Minecraft.getInstance().gui.setScreen(null);
                 return true;
             }
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, doubleClick);
     }
 
     @Override
@@ -132,7 +136,7 @@ public class ItemFinderScreen extends Screen {
                 : matchedItems.size() + " items match - click one, or scroll for more";
         graphics.text(this.font, status, listX, listY - 12, SUBTEXT_COLOR, false);
 
-        
+        // --- Scrollable list ---
         graphics.enableScissor(listX, listY, listX + listWidth, listY + listHeight);
         graphics.fill(listX, listY, listX + listWidth, listY + listHeight, 0x40000000);
 
@@ -148,9 +152,9 @@ public class ItemFinderScreen extends Screen {
             int bg = hovered ? ROW_HOVER : (index % 2 == 0 ? ROW_BG_A : ROW_BG_B);
             graphics.fill(listX, rowY, listX + listWidth, rowY + ROW_HEIGHT, bg);
 
-            
+            // Item icon - if this line errors, paste the exact message
             ItemStack stack = new ItemStack(item);
-            graphics.renderItem(stack, listX + 4, rowY + (ROW_HEIGHT - ICON_SIZE) / 2);
+            Minecraft.getInstance().getItemRenderer().renderGuiItem(stack, listX + 4, rowY + (ROW_HEIGHT - ICON_SIZE) / 2);
 
             String itemName = item.getDefaultInstance().getHoverName().getString();
             graphics.text(this.font, itemName, listX + 4 + ICON_SIZE + 6, rowY + (ROW_HEIGHT - 8) / 2, TEXT_COLOR, false);
@@ -158,7 +162,7 @@ public class ItemFinderScreen extends Screen {
 
         graphics.disableScissor();
 
-        
+        // --- Scrollbar ---
         if (matchedItems.size() > VISIBLE_ROWS) {
             int barX = listX + listWidth + 4;
             graphics.fill(barX, listY, barX + 4, listY + listHeight, SCROLLBAR_TRACK);
@@ -175,4 +179,4 @@ public class ItemFinderScreen extends Screen {
     public boolean isPauseScreen() {
         return false;
     }
-    }
+            }
