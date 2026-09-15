@@ -153,8 +153,9 @@ public class ItemFinderScreen extends Screen {
             graphics.fill(listX, rowY, listX + listWidth, rowY + ROW_HEIGHT, bg);
 
             // Item icon - if this line errors, paste the exact message
-            ItemStack stack = new ItemStack(item);
-            graphics.renderFakeItem(stack, listX + 4, rowY + (ROW_HEIGHT - ICON_SIZE) / 2);
+            graphics.fill(listX + 4, rowY + (ROW_HEIGHT - ICON_SIZE) / 2,
+            listX + 4 + ICON_SIZE, rowY + (ROW_HEIGHT - ICON_SIZE) / 2 + ICON_SIZE, 0xFF5A5A5A);
+            graphics.outline(listX + 4, rowY + (ROW_HEIGHT - ICON_SIZE) / 2, ICON_SIZE, ICON_SIZE, 0xFF808080);
 
             String itemName = item.getDefaultInstance().getHoverName().getString();
             graphics.text(this.font, itemName, listX + 4 + ICON_SIZE + 6, rowY + (ROW_HEIGHT - 8) / 2, TEXT_COLOR, false);
